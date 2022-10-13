@@ -1,3 +1,24 @@
+# This code is available as a Package @
+# https://pypi.org/project/Marvel-API-HARI/1.0/
+
+'''
+    Hari_Marvel_API: 
+    1. Fetches all marvel characters starting with a user specified character in DataFrame object
+    2. Allows the user to write filtering functions
+
+    How to use this code?
+    1. Generate an API_KEY and Private_key from the developer marvel site
+    2. initialize Hari_Marvel_API object while passing in both the above keys
+    3. Produce a hash by calling the hash_gen function
+    4. Use All_calls method to generate the df while giving the first name of the character
+    5. This generates a DF
+    6. You can use df_filter function to perform queries(mostly numerical)
+
+    A TEST_activity_5 file is attacthed showing all the above steps
+
+    Hope you liked this Code!!!
+'''
+
 # import dependencies
 import sys
 import os
