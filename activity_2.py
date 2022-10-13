@@ -16,7 +16,7 @@ def hash_gen(private_key, api_key):
     #Generating the Hash
     m = hashlib.md5()
 
-    ts = str(time.time())   #creates time stamp as string
+    ts = str(1)   #creates time stamp as 1
     m.update(bytes(ts, 'utf-8'))  # add the timestamp to hash
     m.update(bytes(private_key, 'utf-8')) #add the private key to 
         #the hash in byte format
@@ -35,7 +35,7 @@ def API_call(api_key, hasht, nameStartsWith):
     #print(query_url) 
     
     query_url = base_url + query
-    ts = str(time.time())
+    ts = str(1)
     payload = {
         'nameStartsWith':nameStartsWith,
         'limit':100,
@@ -54,20 +54,20 @@ def API_call(api_key, hasht, nameStartsWith):
     df_select = df_norm[["id", "name", "comics.available", "series.available", "stories.available", "events.available"]]
     return df_select
 
-def All_calls(api_key):
+def All_calls(api_key, hash):
     #All marvel characters fetched by going through every ascii characters
     
     i = 65     #for a-z
     df_final = pd.DataFrame() 
     while i<91:
-        df_select = API_call(api_key, hash_gen(os.getenv("private_key"), os.getenv("api_key")), chr(i))
+        df_select = API_call(api_key, hash, chr(i))
         df_final = pd.concat([df_final, df_select])   #appending every call data
         i=i+1
 
-    df_select = API_call(api_key, hash_gen(os.getenv("private_key"), os.getenv("api_key")), '3')
+    df_select = API_call(api_key, hash, '3')
     df_final = pd.concat([df_final, df_select])   #appending every call data
     return df_final
 
 configure()
-df_final = All_calls(os.getenv("api_key"))
+df_final = All_calls(os.getenv("api_key"), os.getenv("hash"))
 print(df_final.head())

@@ -11,19 +11,6 @@ from dotenv import load_dotenv
 def configure():
     load_dotenv()
 
-def hash_gen(private_key, api_key):
-    #Generating the Hash
-    m = hashlib.md5()
-
-    ts = str(time.time())   #creates time stamp as string
-    m.update(bytes(ts, 'utf-8'))  # add the timestamp to hash
-    m.update(bytes(private_key, 'utf-8')) #add the private key to 
-        #the hash in byte format
-    m.update(bytes(api_key, 'utf-8')) #add the public key to 
-        #the hash in byte format
-    hasht = m.hexdigest()    #Marvel requires the string to be in hex(mentioned nowhere)
-    return hasht
-
 def API_call(api_key, hasht, nameStartsWith, offset):
     #constructing the query
 
@@ -35,7 +22,7 @@ def API_call(api_key, hasht, nameStartsWith, offset):
     #print(query_url) 
     
     query_url = base_url + query
-    ts = str(time.time())
+    ts = str(1)
     payload = {
         'nameStartsWith':nameStartsWith,
         'limit':100,
@@ -64,22 +51,19 @@ def API_call(api_key, hasht, nameStartsWith, offset):
             print(data)
         return None, 0
 
-def All_calls(api_key):
+def All_calls(api_key, hash, nameStartWith):
     #All marvel characters fetched by going through every ascii characters
-    i = 0
     df_final = pd.DataFrame() 
-    while i<129:
-        offset=0
-        c=0
-        while (c==0 and offset==0) or c==100:    #c is the count returned after every call
-            df_select, c = API_call(api_key, hash_gen(os.getenv("private_key"), os.getenv("api_key")), chr(i), offset)
-            df_final = pd.concat([df_final, df_select])   #appending every call data
-            offset = offset+100      #offset increased by 100
-        i=i+1
+    offset=0
+    c=0
+    while (c==0 and offset==0) or c==100:    #c is the count returned after every call
+        df_select, c = API_call(api_key, hash, nameStartWith, offset)
+        df_final = pd.concat([df_final, df_select])   #appending every call data
+        offset = offset+100      #offset increased by 100
     return df_final
 
 configure()
-df_final = All_calls(os.getenv("api_key"))
+df_final = All_calls(os.getenv("api_key"), os.getenv("hash"), '%')
 
 print("Initial DF shape:", df_final.shape)
 print(df_final.head())
