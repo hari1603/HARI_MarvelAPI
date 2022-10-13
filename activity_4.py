@@ -1,30 +1,16 @@
 import pandas as pd
-import num_hari
 
 df = pd.read_csv("./marvel_data.csv")   #opening the dataset
 
-df.head()
+def df_filter():
+    col = input("Enter the column which needs to be filtered")
+    condition = input("Enter the condition")
+    val = input("Enter the Value")
+    try:
+        df_filtered = df[col].apply(lambda x: eval(f"{x} {condition} {val}"))
+        print(f"Total queries obtained: {df[df_filtered].shape[0]}")
+        print(df[df_filtered])
+    except:
+        print("Wrong Query. Please try again!")
 
-def filter(df, op_column, op, value, display_column):
-    #make sql like where queries by passing in the column, value , comparision operator
-    #and select the columns you want to be displayed
-    df_show = pd.DataFrame()
-    match op:
-        case '>':
-            df_show = df[df[op_column]>value][display_column]
-            return df_show
-        case '<':
-            df_show = df[df[op_column]<value][display_column]
-            return df_show
-        case '=':
-            df_show = df[df[op_column]==value][display_column]
-            return df_show
-        case '>=':
-            df_show = df[df[op_column]>=value][display_column]
-            return df_show
-        case '<=':
-            df_show = df[df[op_column]<=value][display_column]
-            return df_show
-
-df_show = filter(df, "comics.available", '=', 4, ["id", "name"])
-print(df_show)
+df_filter()
